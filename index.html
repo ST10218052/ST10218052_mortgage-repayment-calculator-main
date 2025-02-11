@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Repayment Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main">
+        <div class="clear-link">
+            <a href="#" id="clear-link">Clear</a>
+        </div>
+        <div class="mortgage">
+            <h1>Mortgage Calculator</h1>
+            <form id="mortgage-form">
+                <div class="MortgageAmount">
+                    <label for="loan">Mortagage Amount</label>
+                    <div class="Amount">
+                        <label for="sign">R</label>
+                        <input type="text" name="loan" id="loan" placeholder="Enter Loan Amount">
+                    </div>
+                </div>
+                <br>
+                <div class="Terms1">
+                    <div class="terms">
+                        <label for="years">Mortagage Terms</label>
+                        <div class="years">
+                            <input type="text" name="years" id="years" placeholder="Enter Years">
+                            <label for="years">Years</label>
+                        </div>
+                        <br>
+                    </div>
+                    <div class="interest">
+                        <label for="interest">Interest Rate</label>
+                        <div class="Rate">
+                            <input type="text" name="interest" id="interest" placeholder="Enter Interest Rate">
+                            <label for="Rate">%</label>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="mortgageType">
+                    <label for="type">Mortgage Type</label>
+                    <div class="Repayment">
+                        <label class="container">Repayment
+                            <input type="checkbox" checked="checked">
+                            <span class="checkmark"></span>
+                          </label>
+                    </div>
+                    <div class="Interest">
+                        <label class="container">Interest Only
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                          </label>
+                    </div>
+                </div>
+                <br>
+                <div class="button">
+                    <button type="submit" name="submit"><img src="images/icon-calculator.svg" alt="logo">Calculate Payments</button>
+                </div>
+            </form> 
+        </div>
+        <div class="results">
+            <img src="images/illustration-empty.svg" alt="">
+            <br>
+            <h2>Results shown here </h2>
+            <p>Complete the form and click "calculate payments" to see what your monthly repayment would be.</p>
+            
+        </div>
+        <div class="results2"  style="display: none;" style="background-color: rgb(6, 6, 77); color: antiquewhite;" >
+            <h2>Your results </h2>
+            <p>Your results are shown below based on the information you provided.To adjust the results ,edit the form and click "Calculate Payments" again </p>
+            <div class="results1"></div>
+            <div class="repayments" style="background-color: rgb(9, 9, 58);">
+              <div class="Monthly">
+                <p>Monthly Repayment:</p> <span>R300</span>
+              </div> 
+              <div class="total1">
+                 <p>Total Repayment: </p><span>R300</span>
+            
+              </div>
+               </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+</html>
+<script>
+document.getElementById('mortgage-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const loanAmount = parseFloat(document.getElementById('loan').value);
+    const years = parseInt(document.getElementById('years').value);
+    const interestRate = parseFloat(document.getElementById('interest').value) / 100;
+    const isRepayment = document.querySelector('.Repayment input').checked;
+
+    if (isNaN(loanAmount) || isNaN(years) || isNaN(interestRate)) {
+        alert('Please enter valid numbers');
+        return;
+    }
+
+    let monthlyRepayment, totalRepayment;
+
+    if (isRepayment) {
+        const monthlyInterestRate = interestRate / 12;
+        const numberOfPayments = years * 12;
+        monthlyRepayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+        totalRepayment = monthlyRepayment * numberOfPayments;
+    } else {
+        monthlyRepayment = loanAmount * (interestRate / 12);
+        totalRepayment = (monthlyRepayment * 12 * years) + loanAmount;
+    }
+    document.querySelector('.results').style.display = 'none';
+    document.querySelector('.results2').style.display = 'block';
+
+    document.querySelector('.results2').style.display = 'block';
+    document.querySelector('.repayments').innerHTML = `
+        <p>Monthly Repayment: R${monthlyRepayment.toFixed(2)}</p>
+        <p>Total Repayment: R${totalRepayment.toFixed(2)}</p>
+    `;
+});
+</script></script>
